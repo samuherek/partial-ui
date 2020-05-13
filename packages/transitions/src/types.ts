@@ -1,16 +1,16 @@
 import {
   TransitionProps as _TransitionProps,
-  TransitionActions
-} from "react-transition-group/Transition";
-import { CSSProperties } from "react";
+  TransitionActions,
+} from 'react-transition-group/Transition';
+import { CSSProperties } from 'react';
 
 export type TransitionHandlerKeys =
-  | "onEnter"
-  | "onEntering"
-  | "onEntered"
-  | "onExit"
-  | "onExiting"
-  | "onExited";
+  | 'onEnter'
+  | 'onEntering'
+  | 'onEntered'
+  | 'onExit'
+  | 'onExiting'
+  | 'onExited';
 
 export type TransitionHandlerProps = Pick<
   _TransitionProps,
@@ -18,11 +18,11 @@ export type TransitionHandlerProps = Pick<
 >;
 
 export type TransitionKeys =
-  | "in"
-  | "mountOnEnter"
-  | "unmountOnExit"
-  | "timeout"
-  | "addEndListener"
+  | 'in'
+  | 'mountOnEnter'
+  | 'unmountOnExit'
+  | 'timeout'
+  | 'addEndListener'
   | TransitionHandlerKeys;
 
 export interface TransitionProps
