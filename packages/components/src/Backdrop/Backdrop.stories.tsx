@@ -1,9 +1,9 @@
-import React from "react";
-import Backdrop from "./Backdrop";
+import React from 'react';
+import { Backdrop } from './Backdrop';
 
 export default {
-  title: "Misc/Backdrop",
-  component: Backdrop
+  title: 'Misc/Backdrop',
+  component: Backdrop,
 };
 
 export const Base = () => {

@@ -78,7 +78,8 @@ export function getScrollbarSize() {
   return scrollbarSize;
 }
 
-export function ownerWindow(node: Element) {
+// TODO: make into a util
+function ownerWindow(node: Element) {
   const doc = ownerDocument(node);
   return doc.defaultView || window;
 }
@@ -95,7 +96,9 @@ function isOverflowing(container: Element) {
 }
 
 function handleContainer(
+  // @ts-ignore
   modal: HTMLElement,
+  // @ts-ignore
   mountNode: HTMLElement,
   container: HTMLElement
 ) {
@@ -181,9 +184,56 @@ function getContainer(container: any): any {
   return ReactDOM.findDOMNode(container);
 }
 
-export function ownerDocument(node: any): any {
+// TODO: make into a util
+function ownerDocument(node: any): any {
   return (node && node.ownerDocument) || document;
 }
+
+export interface BackdropProps
+  extends StandardProps<React.HTMLAttributes<HTMLDivElement>> {
+  /**
+   * If `true`, the backdrop is invisible.
+   * It can be used when rendering a popover or a custom select component.
+   */
+  invisible?: boolean;
+  /**
+   * If `true`, the backdrop is open.
+   */
+  open: boolean;
+  /**
+   * The duration for the transition, in milliseconds.
+   * You may specify a single timeout for all transitions, or individually with an object.
+   */
+  timeout?: TransitionProps['timeout'];
+}
+
+const WrapStyled = styled.div`
+  z-index: -1;
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  -webkit-tap-highlight-color-color: transparent;
+`;
+
+const SimpleBackdrop = React.forwardRef<unknown, BackdropProps>(
+  function SimpleBackdrop(props, ref) {
+    const { invisible = false, open, ...other } = props;
+
+    return open ? (
+      <WrapStyled
+        aria-hidden={true}
+        // FIXME: not sure how to type this
+        // @ts-ignore
+        ref={ref}
+        style={invisible ? { backgroundColor: 'transparent' } : undefined}
+        {...other}
+      />
+    ) : null;
+  }
+);
 
 function useModalCore(props: ModalProps, ref: React.Ref<any>) {
   const {
@@ -194,7 +244,7 @@ function useModalCore(props: ModalProps, ref: React.Ref<any>) {
     disableEscapeKeyDown = false,
     onClose,
     disableBackdropClick = false,
-    BackdropComponent = 'div',
+    BackdropComponent = SimpleBackdrop,
   } = props;
 
   const restore = React.useRef<() => void | void>();
@@ -380,7 +430,6 @@ const Modal = React.forwardRef<unknown, ModalProps>((p, r) => {
         {hideBackdrop ? null : (
           <BackdropComponent
             open={open}
-            // FIXME: why??
             // @ts-ignore
             onClick={handleBackdropClick}
             {...BackdropProps}
@@ -401,4 +450,4 @@ const Modal = React.forwardRef<unknown, ModalProps>((p, r) => {
   );
 });
 
-export { Modal};
+export { Modal };

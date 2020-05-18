@@ -1,14 +1,14 @@
-import React from "react";
-import Menu from "./Menu";
-import { storiesOf, addDecorator } from "@storybook/react";
-import { withA11Y } from "@storybook/addon-a11y";
-import MenuItem from "../MenuItem";
-import Button from "../../theme/Button";
+import React from 'react';
+import { Menu } from './Menu';
+import { storiesOf, addDecorator } from '@storybook/react';
+import { withA11Y } from '@storybook/addon-a11y';
+import { MenuItem } from '../MenuItem';
+import { ButtonBase } from '../ButtonBase';
 
-const stories = storiesOf("Navigation/Menu", module);
+const stories = storiesOf('Navigation/Menu', module);
 addDecorator(withA11Y);
 
-stories.add("Overview", () => {
+stories.add('Overview', () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClick = (event: any) => {
@@ -20,19 +20,19 @@ stories.add("Overview", () => {
   };
 
   return (
-    <>
-      <Button
+    <div style={{ padding: 50 }}>
+      <ButtonBase
         aria-controls="simple-menu"
         aria-haspopup="true"
         onClick={handleClick}
       >
         Open Menu
-      </Button>
+      </ButtonBase>
       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
         <MenuItem onClick={handleClose}>Profile</MenuItem>
         <MenuItem onClick={handleClose}>My account</MenuItem>
         <MenuItem onClick={handleClose}>Logout</MenuItem>
       </Menu>
-    </>
+    </div>
   );
 });

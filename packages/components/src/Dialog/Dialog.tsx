@@ -3,8 +3,7 @@ import clsx from 'clsx';
 import React, { SyntheticEvent } from 'react';
 import styled from 'styled-components';
 import { Fade } from '@partial-ui/transitions';
-import { Modal } from '@partial-ui/core';
-import Paper from '../Paper';
+import { Modal, Paper } from '@partial-ui/core';
 import { Backdrop } from '../Backdrop';
 
 export type OnCloseFn = (ev: SyntheticEvent<any>, type: string) => void;

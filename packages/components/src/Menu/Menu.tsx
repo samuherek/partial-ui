@@ -1,16 +1,13 @@
-import React from "react";
-import styled from "styled-components";
-import Popover from "../Popover";
-import Paper from "../Paper";
-import MenuList from "../MenuList";
-import { StandardProps } from "../types";
-import { PopoverProps } from "../Popover/Popover";
+import React from 'react';
+import styled from 'styled-components';
+import MenuList from '../MenuList';
+import { StandardProps } from '../types';
+import { PopoverProps, Popover, Paper, PaperProps } from '@partial-ui/core';
 import {
   TransitionHandlerProps,
-  TransitionProps
-} from "../../core/utils/transitions";
-import { MenuListProps } from "../MenuList/MenuList";
-import { PaperProps } from "../Paper/Paper";
+  TransitionProps,
+} from '@partial-ui/transitions';
+import { MenuListProps } from '../MenuList/MenuList';
 
 export interface MenuProps
   extends StandardProps<PopoverProps & Partial<TransitionHandlerProps>> {
@@ -18,7 +15,7 @@ export interface MenuProps
    * The DOM element used to set the position of the menu.
    * @document
    */
-  anchorEl?: PopoverProps["anchorEl"];
+  anchorEl?: PopoverProps['anchorEl'];
   /**
    * If `true` (Default) will focus the `[role="menu"]` if no focusable child is found. Disabled
    * children are not focusable. If you set this prop to `false` focus will be placed
@@ -48,43 +45,43 @@ export interface MenuProps
    * @param {string} reason Can be: `"escapeKeyDown"`, `"backdropClick"`, `"tabKeyDown"`.
    */
   // @ts-ignore
-  onClose?: PopoverProps["onClose"];
+  onClose?: PopoverProps['onClose'];
   /**
    * Callback fired before the Menu enters.
    * @document
    */
   // @ts-ignore
-  onEnter?: PopoverProps["onEnter"];
+  onEnter?: PopoverProps['onEnter'];
   /**
    * Callback fired when the Menu has entered.
    * @document
    */
   // @ts-ignore
-  onEntered?: PopoverProps["onEntered"];
+  onEntered?: PopoverProps['onEntered'];
   /**
    * Callback fired when the Menu is entering.
    * @document
    */
   // @ts-ignore
-  onEntering?: PopoverProps["onEntering"];
+  onEntering?: PopoverProps['onEntering'];
   /**
    * Callback fired before the Menu exits.
    * @document
    */
   // @ts-ignore
-  onExit?: PopoverProps["onExit"];
+  onExit?: PopoverProps['onExit'];
   /**
    * Callback fired when the Menu has exited.
    * @document
    */
   // @ts-ignore
-  onExited?: PopoverProps["onExited"];
+  onExited?: PopoverProps['onExited'];
   /**
    * Callback fired when the Menu is exiting.
    * @document
    */
   // @ts-ignore
-  onExiting?: PopoverProps["onExiting"];
+  onExiting?: PopoverProps['onExiting'];
   /**
    * If `true`, the menu is visible.
    */
@@ -96,20 +93,20 @@ export interface MenuProps
    * `classes` prop applied to the [`Popover`](/api/popover/) element.
    */
   // @ts-ignore
-  PopoverClasses?: PopoverProps["classes"];
+  PopoverClasses?: PopoverProps['classes'];
   /**
    * The length of the transition in `ms`, or 'auto'
    */
-  transitionDuration?: TransitionProps["timeout"] | "auto";
+  transitionDuration?: TransitionProps['timeout'] | 'auto';
   /**
    * The variant to use. Use `menu` to prevent selected items from impacting the initial focus
    * and the vertical alignment relative to the anchor element.
    */
-  variant?: "menu" | "selectedMenu";
+  variant?: 'menu' | 'selectedMenu';
 }
 
-export const classes = {
-  root: "Menu"
+const classes = {
+  root: 'Menu',
 };
 
 const PaperStyled = styled(Paper)`
@@ -131,7 +128,7 @@ const Menu = React.forwardRef<unknown, MenuProps>(function Menu(props, ref) {
     open,
     PaperProps = {},
     PopoverClasses,
-    transitionDuration = "auto",
+    transitionDuration = 'auto',
     ...rest
   } = props;
 
@@ -152,8 +149,8 @@ const Menu = React.forwardRef<unknown, MenuProps>(function Menu(props, ref) {
       ref={ref}
       transitionDuration={transitionDuration}
       anchorOrigin={{
-        vertical: "bottom",
-        horizontal: "left"
+        vertical: 'bottom',
+        horizontal: 'left',
       }}
       // transformOrigin={{
       //   vertical: "top",
@@ -168,4 +165,4 @@ const Menu = React.forwardRef<unknown, MenuProps>(function Menu(props, ref) {
   );
 });
 
-export default Menu;
+export { Menu, classes as menuClasses };

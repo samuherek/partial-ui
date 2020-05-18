@@ -1,9 +1,9 @@
-import React from "react";
-import Dialog from "./Dialog";
+import React from 'react';
+import { Dialog } from './Dialog';
 
 export default {
-  title: "Dialog/Dialog",
-  component: Dialog
+  title: 'Dialog/Dialog',
+  component: Dialog,
 };
 
 export const Base = () => {

@@ -1,9 +1,9 @@
-import React from "react";
-import DialogActions from "./DialogActions";
+import React from 'react';
+import { DialogActions } from './DialogActions';
 
 export default {
-  title: "Dialog/Actions",
-  component: DialogActions
+  title: 'Dialog/Actions',
+  component: DialogActions,
 };
 
 export const Base = () => {

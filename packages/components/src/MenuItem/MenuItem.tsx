@@ -1,8 +1,8 @@
-import React from "react";
-import ListItem from "../ListItem/ListItem";
-import clsx from "clsx";
+import React from 'react';
+import { ListItem } from '../ListItem/ListItem';
+import clsx from 'clsx';
 
-interface MenuItemProps {
+export interface MenuItemProps {
   className?: string;
   component?: any;
   role?: string;
@@ -13,15 +13,18 @@ interface MenuItemProps {
   onClick?: any;
 }
 
+const classes = {
+  root: 'MenuItem',
+};
+
 const MenuItem = React.forwardRef<unknown, MenuItemProps>(function MenuItem(
   props,
   ref
 ) {
   const {
     className,
-    component = "li",
-    // disableGutters = false,
-    role = "menuitem",
+    component = 'li',
+    role = 'menuitem',
     selected,
     tabIndex: tabIndexProp,
     ...rest
@@ -40,12 +43,11 @@ const MenuItem = React.forwardRef<unknown, MenuItemProps>(function MenuItem(
       tabIndex={tabIndex}
       component={component}
       selected={selected}
-      // disableGutters={disableGutters}
-      className={clsx(className)}
+      className={clsx(className, classes.root)}
       ref={ref}
       {...rest}
     />
   );
 });
 
-export default MenuItem;
+export { MenuItem, classes as menuItemClasses };

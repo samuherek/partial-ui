@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { BackdropProps } from './types.d';
+import { BackdropProps } from './Backdrop';
 
 const WrapStyled = styled.div`
   z-index: -1;

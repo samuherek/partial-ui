@@ -1,7 +1,7 @@
-import React from "react";
-import styled from "styled-components";
-import clsx from "clsx";
-import ButtonBase from "../ButtonBase/ButtonBase";
+import React from 'react';
+import styled from 'styled-components';
+import clsx from 'clsx';
+import { ButtonBase } from '../ButtonBase';
 
 export interface ListItemProps {
   children: React.ReactNode;
@@ -13,13 +13,12 @@ export interface ListItemProps {
   disabled?: boolean;
   autoFocus?: boolean;
   selected?: boolean;
-  // alignItems: 'flex-start' | 'center',
 }
 
-export const classes = {
-  root: "ListItem",
-  disabled: "disabled",
-  selected: "selected"
+const classes = {
+  root: 'ListItem',
+  disabled: 'disabled',
+  selected: 'selected',
 };
 
 const ListItemStyled = styled.li`
@@ -52,7 +51,7 @@ const ListItem = React.forwardRef<unknown, ListItemProps>(function ListItem(
     button = false,
     buttonComponent: ButtonComponent = ButtonBase,
     buttonProps = {},
-    component = "li",
+    component = 'li',
     className,
     ...rest
   } = props;
@@ -62,10 +61,10 @@ const ListItem = React.forwardRef<unknown, ListItemProps>(function ListItem(
   let componentProps = {
     className: clsx(className, classes.root, {
       [classes.disabled]: disabled,
-      [classes.selected]: selected
+      [classes.selected]: selected,
     }),
     as: component,
-    ...rest
+    ...rest,
   };
 
   if (button) {
@@ -87,4 +86,4 @@ const ListItem = React.forwardRef<unknown, ListItemProps>(function ListItem(
   );
 });
 
-export default ListItem;
+export { ListItem, classes as listItemClasses };

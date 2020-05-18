@@ -1,8 +1,8 @@
-import React from "react";
-import FormControl from "../../core/FormControl";
-import Input from "../Input";
-import InputLabel from "../InputLabel";
-import { InputCoreProps } from "../../core/InputCore";
+import React from 'react';
+import FormControl from '../../core/FormControl';
+import Input from '../Input';
+import InputLabel from '../InputLabel';
+import { InputCoreProps } from '../../core/InputCore';
 
 export interface TextFieldProps extends InputCoreProps {
   autoComplete?: string;
@@ -31,12 +31,12 @@ export interface TextFieldProps extends InputCoreProps {
   SelectProps?: object;
   type?: string;
   value: any;
-  variant?: "standard";
+  variant?: 'standard';
   startAdornment?: any;
   endAdornment?: any;
 }
 const variantInputComponent = {
-  standard: Input
+  standard: Input,
 };
 
 const TextField = React.forwardRef<any, TextFieldProps>(function TextField(
@@ -74,7 +74,7 @@ const TextField = React.forwardRef<any, TextFieldProps>(function TextField(
     startAdornment,
     type,
     value,
-    variant = "standard",
+    variant = 'standard',
     ...rest
   } = props;
 

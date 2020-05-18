@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
-import List from '../List/List';
-import { useForkRef } from '@partial-ui/uitls';
+import { List } from '../List';
+import { useForkRef } from '@partial-ui/utils';
 import { StandardProps } from '../types';
 import { ListProps } from '../List';
 

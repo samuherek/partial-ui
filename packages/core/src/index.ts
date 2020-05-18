@@ -7,3 +7,6 @@ export * from './InputAdornmentCore';
 export * from './InputCore';
 export * from './Portal';
 export * from './TrapFocus';
+export * from './Paper';
+export * from './Popover';
+export * from './Modal';

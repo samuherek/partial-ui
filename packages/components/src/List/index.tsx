@@ -1,2 +1,1 @@
-export * from "./List";
-export * from "./List.d";
+export * from './List';

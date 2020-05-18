@@ -1,18 +1,20 @@
-import React from "react";
-import Modal from "../Modal";
-import Roll from "../../transitions/Roll";
-import styled from "styled-components";
-import { StandardProps } from "../types";
-import { ModalProps } from "../Modal/Modal";
+import React from 'react';
+import { Modal } from '../Modal';
+import styled from 'styled-components';
+import { StandardProps } from '../types';
+import { ModalProps } from '../Modal/Modal';
 import {
   TransitionHandlerProps,
-  TransitionProps
-} from "../../core/utils/transitions";
-import { PaperProps } from "../Paper";
+  TransitionProps,
+} from '@partial-ui/transitions';
+import { PaperProps } from '../Paper';
+import { PortalProps } from '../Portal/Portal';
+import { useForkRef } from '@partial-ui/utils';
+import { Transition } from 'react-transition-group';
 
 export interface PopoverOrigin {
-  vertical: "top" | "center" | "bottom" | number;
-  horizontal: "left" | "center" | "right" | number;
+  vertical: 'top' | 'center' | 'bottom' | number;
+  horizontal: 'left' | 'center' | 'right' | number;
 }
 
 export interface PopoverPosition {
@@ -20,7 +22,7 @@ export interface PopoverPosition {
   left: number;
 }
 
-export type PopoverReference = "anchorEl" | "anchorPosition" | "none";
+export type PopoverReference = 'anchorEl' | 'anchorPosition' | 'none';
 
 export interface PopoverActions {
   updatePosition(): void;
@@ -28,6 +30,9 @@ export interface PopoverActions {
 
 export interface PopoverProps
   extends StandardProps<ModalProps & Partial<TransitionHandlerProps>> {
+  // Not sure why I need to add this again
+  open: ModalProps['open'];
+  container: PortalProps['container'];
   action?: React.Ref<PopoverActions>;
   anchorEl?: null | Element | ((element: Element) => Element);
   anchorOrigin?: PopoverOrigin;
@@ -42,11 +47,11 @@ export interface PopoverProps
   role?: string;
   transformOrigin?: PopoverOrigin;
   TransitionComponent?: React.ComponentType<TransitionProps>;
-  transitionDuration?: TransitionProps["timeout"] | "auto";
+  transitionDuration?: TransitionProps['timeout'] | 'auto';
   TransitionProps?: TransitionProps;
 }
 
-const DivStyled = styled.div`
+const WrapStyled = styled.div`
   position: absolute;
   overflow-y: auto;
   overflow-x: hidden;
@@ -99,15 +104,15 @@ export function getOffsetTop(
     width: number;
     height: number;
   },
-  vertical: number | "center" | "bottom" | "top"
+  vertical: number | 'center' | 'bottom' | 'top'
 ) {
   let offset = 0;
 
-  if (typeof vertical === "number") {
+  if (typeof vertical === 'number') {
     offset = vertical;
-  } else if (vertical === "center") {
+  } else if (vertical === 'center') {
     offset = rect.height / 2;
-  } else if (vertical === "bottom") {
+  } else if (vertical === 'bottom') {
     offset = rect.height;
   }
 
@@ -119,15 +124,15 @@ export function getOffsetLeft(
     width: number;
     height: number;
   },
-  horizontal: number | "center" | "left" | "right"
+  horizontal: number | 'center' | 'left' | 'right'
 ) {
   let offset = 0;
 
-  if (typeof horizontal === "number") {
+  if (typeof horizontal === 'number') {
     offset = horizontal;
-  } else if (horizontal === "center") {
+  } else if (horizontal === 'center') {
     offset = rect.width / 2;
-  } else if (horizontal === "right") {
+  } else if (horizontal === 'right') {
     offset = rect.width;
   }
 
@@ -139,8 +144,8 @@ function getTransformOriginValue(transformOrigin: {
   horizontal: number;
 }) {
   return [transformOrigin.horizontal, transformOrigin.vertical]
-    .map(n => (typeof n === "number" ? `${n}px` : n))
-    .join(" ");
+    .map(n => (typeof n === 'number' ? `${n}px` : n))
+    .join(' ');
 }
 
 // Sum the scrollTop between two elements.
@@ -156,34 +161,27 @@ function getScrollParent(parent: HTMLElement, child: HTMLElement) {
 }
 
 function getAnchorEl(anchorEl: any) {
-  return typeof anchorEl === "function" ? anchorEl() : anchorEl;
+  return typeof anchorEl === 'function' ? anchorEl() : anchorEl;
 }
 
-const Popover = React.forwardRef<unknown, PopoverProps>((props, ref) => {
+function usePopover(props: PopoverProps, ref: React.Ref<any>) {
   const {
-    children,
-    // FIXME: why??
-    // @ts-ignore
     open,
     anchorEl,
-    TransitionComponent = Roll,
-    // FIXME: why??
-    // @ts-ignore
     container: containerProp,
     TransitionProps = {},
     anchorPosition,
     getContentAnchorEl,
     marginThreshold = 16,
-    anchorReference = "anchorEl",
+    anchorReference = 'anchorEl',
     anchorOrigin = {
-      vertical: "top",
-      horizontal: "left"
+      vertical: 'top',
+      horizontal: 'left',
     },
     transformOrigin = {
-      vertical: "top",
-      horizontal: "left"
+      vertical: 'top',
+      horizontal: 'left',
     },
-    ...other
   } = props;
 
   const paperRef = React.useRef<HTMLElement | null>(null);
@@ -202,7 +200,7 @@ const Popover = React.forwardRef<unknown, PopoverProps>((props, ref) => {
         vertical:
           getOffsetTop(elemRect, transformOrigin.vertical) +
           contentAnchorOffset,
-        horizontal: getOffsetLeft(elemRect, transformOrigin.horizontal)
+        horizontal: getOffsetLeft(elemRect, transformOrigin.horizontal),
       };
     },
     [transformOrigin.horizontal, transformOrigin.vertical]
@@ -218,7 +216,7 @@ const Popover = React.forwardRef<unknown, PopoverProps>((props, ref) => {
     (element: HTMLElement) => {
       let contentAnchorOffset = 0;
 
-      if (getContentAnchorEl && anchorReference === "anchorEl") {
+      if (getContentAnchorEl && anchorReference === 'anchorEl') {
         const contentAnchorEl = getContentAnchorEl(element);
 
         if (contentAnchorEl && element.contains(contentAnchorEl)) {
@@ -233,16 +231,16 @@ const Popover = React.forwardRef<unknown, PopoverProps>((props, ref) => {
         }
 
         // != the default value
-        if (process.env.NODE_ENV !== "production") {
-          if (anchorOrigin.vertical !== "top") {
+        if (process.env.NODE_ENV !== 'production') {
+          if (anchorOrigin.vertical !== 'top') {
             console.error(
               [
-                "Material-UI: you can not change the default `anchorOrigin.vertical` value ",
-                "when also providing the `getContentAnchorEl` prop to the popover component.",
-                "Only use one of the two props.",
-                "Set `getContentAnchorEl` to `null | undefined`" +
-                  " or leave `anchorOrigin.vertical` unchanged."
-              ].join("\n")
+                'Material-UI: you can not change the default `anchorOrigin.vertical` value ',
+                'when also providing the `getContentAnchorEl` prop to the popover component.',
+                'Only use one of the two props.',
+                'Set `getContentAnchorEl` to `null | undefined`' +
+                  ' or leave `anchorOrigin.vertical` unchanged.',
+              ].join('\n')
             );
           }
         }
@@ -257,11 +255,11 @@ const Popover = React.forwardRef<unknown, PopoverProps>((props, ref) => {
   // to attach to on the anchor element (or body if none is provided)
   const getAnchorOffset = React.useCallback(
     contentAnchorOffset => {
-      if (anchorReference === "anchorPosition") {
-        if (process.env.NODE_ENV !== "production") {
+      if (anchorReference === 'anchorPosition') {
+        if (process.env.NODE_ENV !== 'production') {
           if (!anchorPosition) {
             console.error(
-              "Material-UI: you need to provide a `anchorPosition` prop when using " +
+              'Material-UI: you need to provide a `anchorPosition` prop when using ' +
                 '<Popover anchorReference="anchorPosition" />.'
             );
           }
@@ -283,11 +281,11 @@ const Popover = React.forwardRef<unknown, PopoverProps>((props, ref) => {
             ownerDocument(paperRef.current).body;
       const anchorRect = anchorElement.getBoundingClientRect();
 
-      if (process.env.NODE_ENV !== "production") {
+      if (process.env.NODE_ENV !== 'production') {
         const box = anchorElement.getBoundingClientRect();
 
         if (
-          process.env.NODE_ENV !== "test" &&
+          process.env.NODE_ENV !== 'test' &&
           box.top === 0 &&
           box.left === 0 &&
           box.right === 0 &&
@@ -295,21 +293,21 @@ const Popover = React.forwardRef<unknown, PopoverProps>((props, ref) => {
         ) {
           console.warn(
             [
-              "Material-UI: the `anchorEl` prop provided to the component is invalid.",
-              "The anchor element should be part of the document layout.",
-              "Make sure the element is present in the document or that it's not display none."
-            ].join("\n")
+              'Material-UI: the `anchorEl` prop provided to the component is invalid.',
+              'The anchor element should be part of the document layout.',
+              "Make sure the element is present in the document or that it's not display none.",
+            ].join('\n')
           );
         }
       }
 
       const anchorVertical =
-        contentAnchorOffset === 0 ? anchorOrigin.vertical : "center";
+        contentAnchorOffset === 0 ? anchorOrigin.vertical : 'center';
 
       return {
         top: anchorRect.top + getOffsetTop(anchorRect, anchorVertical),
         left:
-          anchorRect.left + getOffsetLeft(anchorRect, anchorOrigin.horizontal)
+          anchorRect.left + getOffsetLeft(anchorRect, anchorOrigin.horizontal),
       };
     },
     [
@@ -317,7 +315,7 @@ const Popover = React.forwardRef<unknown, PopoverProps>((props, ref) => {
       anchorOrigin.horizontal,
       anchorOrigin.vertical,
       anchorPosition,
-      anchorReference
+      anchorReference,
     ]
   );
 
@@ -327,7 +325,7 @@ const Popover = React.forwardRef<unknown, PopoverProps>((props, ref) => {
       const contentAnchorOffset = getContentAnchorOffset(element);
       const elemRect = {
         width: element.offsetWidth,
-        height: element.offsetHeight
+        height: element.offsetHeight,
       };
 
       // Get the transform origin point on the element itself
@@ -336,11 +334,11 @@ const Popover = React.forwardRef<unknown, PopoverProps>((props, ref) => {
         contentAnchorOffset
       );
 
-      if (anchorReference === "none") {
+      if (anchorReference === 'none') {
         return {
           top: null,
           left: null,
-          transformOrigin: getTransformOriginValue(elemTransformOrigin)
+          transformOrigin: getTransformOriginValue(elemTransformOrigin),
         };
       }
 
@@ -371,7 +369,7 @@ const Popover = React.forwardRef<unknown, PopoverProps>((props, ref) => {
         elemTransformOrigin.vertical += diff;
       }
 
-      if (process.env.NODE_ENV !== "production") {
+      if (process.env.NODE_ENV !== 'production') {
         if (
           elemRect.height > heightThreshold &&
           elemRect.height &&
@@ -379,11 +377,11 @@ const Popover = React.forwardRef<unknown, PopoverProps>((props, ref) => {
         ) {
           console.error(
             [
-              "Material-UI: the popover component is too tall.",
+              'Material-UI: the popover component is too tall.',
               `Some part of it can not be seen on the screen (${elemRect.height -
                 heightThreshold}px).`,
-              "Please consider adding a `max-height` to improve the user-experience."
-            ].join("\n")
+              'Please consider adding a `max-height` to improve the user-experience.',
+            ].join('\n')
           );
         }
       }
@@ -402,7 +400,7 @@ const Popover = React.forwardRef<unknown, PopoverProps>((props, ref) => {
       return {
         top: `${Math.round(top)}px`,
         left: `${Math.round(left)}px`,
-        transformOrigin: getTransformOriginValue(elemTransformOrigin)
+        transformOrigin: getTransformOriginValue(elemTransformOrigin),
       };
     },
     [
@@ -411,7 +409,7 @@ const Popover = React.forwardRef<unknown, PopoverProps>((props, ref) => {
       getAnchorOffset,
       getContentAnchorOffset,
       getTransformOrigin,
-      marginThreshold
+      marginThreshold,
     ]
   );
 
@@ -433,6 +431,7 @@ const Popover = React.forwardRef<unknown, PopoverProps>((props, ref) => {
     element.style.transformOrigin = positioning.transformOrigin;
   }, [getPositioningStyle]);
 
+  // @ts-ignore
   const handleEntering = (element: HTMLElement, isAppearing: boolean) => {
     // if (onEntering) {
     //   onEntering(element, isAppearing);
@@ -456,10 +455,10 @@ const Popover = React.forwardRef<unknown, PopoverProps>((props, ref) => {
       setPositioningStyles();
     });
 
-    window.addEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
     return () => {
       handleResize.clear();
-      window.removeEventListener("rezise", handleResize);
+      window.removeEventListener('rezise', handleResize);
     };
   }, [open, setPositioningStyles]);
 
@@ -470,31 +469,92 @@ const Popover = React.forwardRef<unknown, PopoverProps>((props, ref) => {
     containerProp ||
     (anchorEl ? ownerDocument(getAnchorEl(anchorEl)).body : undefined);
 
+  return {
+    props: {
+      ...props,
+      container,
+      TransitionProps,
+    },
+    ref,
+    handleEntering,
+    paperRef,
+  };
+}
+
+const DefaultTransitionComponent = React.forwardRef<any, any>(function(
+  props,
+  ref
+) {
+  const {
+    children,
+    in: inProp,
+    onEnter,
+    onExit,
+    onExited,
+    onEntering,
+    timeout = 0,
+    ...rest
+  } = props;
+
+  const handleRef = useForkRef(children?.ref, ref);
+
+  return (
+    <Transition
+      appear
+      in={inProp}
+      onEnter={onEnter}
+      onExit={onExit}
+      onExited={onExited}
+      onEntering={onEntering}
+      timeout={timeout}
+      {...rest}
+    >
+      {(_: any, childProps: any) => {
+        return React.cloneElement(children, { ref: handleRef, ...childProps });
+      }}
+    </Transition>
+  );
+});
+
+const Popover = React.forwardRef<unknown, PopoverProps>((p, r) => {
+  const {
+    props: {
+      open,
+      container,
+      children,
+      TransitionComponent = DefaultTransitionComponent,
+      TransitionProps,
+      ...rest
+    },
+    ref,
+    handleEntering,
+    paperRef,
+  } = usePopover(p, r);
+
   return (
     <Modal
       container={container}
       open={open}
       ref={ref}
       BackdropProps={{ invisible: true }}
-      {...other}
+      {...rest}
     >
       <TransitionComponent
         appear
         in={open}
-        timeout={200}
         {...TransitionProps}
         onEntering={handleEntering}
       >
-        <DivStyled
-          // FIXME: figure out the typing
+        <WrapStyled
+          // FIXME: styled component ref is issue
           // @ts-ignore
           ref={paperRef}
         >
           {children}
-        </DivStyled>
+        </WrapStyled>
       </TransitionComponent>
     </Modal>
   );
 });
 
-export default Popover;
+export { Popover, usePopover };

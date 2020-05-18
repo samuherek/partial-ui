@@ -1,36 +1,20 @@
-import React from "react";
-import ButtonAdornment from "./ButtonAdornment";
-import Button from "../../theme/Button";
-import { Bell } from "../icons";
+import React from 'react';
+import { ButtonAdornment } from './ButtonAdornment';
+import { ButtonBase } from '../ButtonBase';
 
 export default {
-  title: "Buttons/Button",
-  component: ButtonAdornment
+  title: 'Buttons/Button',
+  component: ButtonAdornment,
 };
 
 export const Adornment = () => (
   <>
-    <Button
+    <ButtonBase
       color="primary"
       variant="contained"
-      startAdornment={
-        <ButtonAdornment position="start">
-          <Bell />
-        </ButtonAdornment>
-      }
+      startAdornment={<ButtonAdornment position="start">a</ButtonAdornment>}
     >
       Start
-    </Button>
-    <Button
-      color="primary"
-      variant="contained"
-      endAdornment={
-        <ButtonAdornment position="end">
-          <Bell />
-        </ButtonAdornment>
-      }
-    >
-      End
-    </Button>
+    </ButtonBase>
   </>
 );
