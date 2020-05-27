@@ -11,3 +11,4 @@ export * from './Paper';
 export * from './Popover';
 export * from './Modal';
 export * from './Typography';
+export * from './Snackbar';
