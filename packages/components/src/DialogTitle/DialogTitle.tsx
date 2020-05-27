@@ -1,15 +1,15 @@
 // @flow
-import clsx from "clsx";
-import React from "react";
-import styled from "styled-components";
+import clsx from 'clsx';
+import React from 'react';
+import styled from 'styled-components';
 
 type Props = {
   className?: string;
   children?: any;
 };
 
-export const classes = {
-  root: "DialogTitle"
+const classes = {
+  root: 'DialogTitle',
 };
 
 const WrapStyled = styled.div`
@@ -33,4 +33,4 @@ function DialogTitle({ className, ...props }: Props) {
   return <WrapStyled className={clsx(className, classes.root)} {...props} />;
 }
 
-export default DialogTitle;
+export { DialogTitle, classes as DialogTitleClasses };

@@ -63,8 +63,8 @@ const WrapStyled = styled.div`
   max-height: calc(100% - 32px);
   /* // We disable the focus ring for mouse, touch and keyboard users. */
   outline: 0;
-  background: white;
-  box-shadow: 0 1px 10px 3px rgba(100, 100, 100, 0.1);
+  /* background: white; */
+  /* box-shadow: 0 1px 10px 3px rgba(100, 100, 100, 0.1); */
 `;
 
 // Corresponds to 10 frames at 60 Hz.

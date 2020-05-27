@@ -58,6 +58,7 @@ const Backdrop = React.forwardRef<any, BackdropProps>((props, ref) => {
         aria-hidden
         // @ts-ignore
         invisible={invisible}
+        ref={ref}
       />
     </Fade>
   );

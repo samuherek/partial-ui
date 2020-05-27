@@ -1,6 +1,6 @@
 {
   "name": "@partial-ui/components",
-  "version": "0.0.6",
+  "version": "0.0.8",
   "author": "Sam Uherek",
   "license": "MIT",
   "main": "dist/index.js",
@@ -38,8 +38,8 @@
   },
   "module": "dist/components.esm.js",
   "dependencies": {
-    "@partial-ui/core": "^0.0.4",
-    "@partial-ui/transitions": "^0.0.1"
+    "@partial-ui/core": "0.0.5",
+    "@partial-ui/transitions": "0.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.9.6",

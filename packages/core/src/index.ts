@@ -10,3 +10,4 @@ export * from './TrapFocus';
 export * from './Paper';
 export * from './Popover';
 export * from './Modal';
+export * from './Typography';

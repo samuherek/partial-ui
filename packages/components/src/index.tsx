@@ -6,3 +6,7 @@ export * from './List';
 export * from './ListItem';
 export * from './Menu';
 export * from './MenuItem';
+export * from './Dialog';
+export * from './DialogActions';
+export * from './DialogContent';
+export * from './DialogTitle';
