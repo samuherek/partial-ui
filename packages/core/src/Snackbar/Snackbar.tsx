@@ -1,6 +1,8 @@
 import clsx from 'clsx';
 import React from 'react';
 import styled from 'styled-components';
+import { useForkRef } from '@partial-ui/utils';
+import { Transition } from 'react-transition-group';
 
 export interface SnackbarProps {
   autoHideDuration?: number;
@@ -33,6 +35,42 @@ const WrapStyled = styled.div`
   bottom: 24px;
   transform: translateX(-50%);
 `;
+
+// TODO: we use this in the Popover as well.
+const DefaultTransitionComponent = React.forwardRef<any, any>(function(
+  props,
+  ref
+) {
+  const {
+    children,
+    in: inProp,
+    onEnter,
+    onExit,
+    onExited,
+    onEntering,
+    timeout = 0,
+    ...rest
+  } = props;
+
+  const handleRef = useForkRef(children?.ref, ref);
+
+  return (
+    <Transition
+      appear
+      in={inProp}
+      onEnter={onEnter}
+      onExit={onExit}
+      onExited={onExited}
+      onEntering={onEntering}
+      timeout={timeout}
+      {...rest}
+    >
+      {(_: any, childProps: any) => {
+        return React.cloneElement(children, { ref: handleRef, ...childProps });
+      }}
+    </Transition>
+  );
+});
 
 function useSnackbarCore(props: SnackbarProps, ref: React.Ref<any>) {
   const {
@@ -161,7 +199,7 @@ const Snackbar = React.forwardRef<any, SnackbarProps>(function Snackbar(p, r) {
       className,
       children,
       transitionDuration,
-      TransitionComponent = 'div',
+      TransitionComponent = DefaultTransitionComponent,
       ...rest
     },
     ref,
