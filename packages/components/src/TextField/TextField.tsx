@@ -1,43 +1,25 @@
 import React from 'react';
-import FormControl from '../../core/FormControl';
-import Input from '../Input';
-import InputLabel from '../InputLabel';
-import { InputCoreProps } from '../../core/InputCore';
+import { InputLabel } from '../InputLabel';
+import { InputBaseProps, InputBase } from '../InputBase';
+import { FormControl } from '@partial-ui/core';
 
-export interface TextFieldProps extends InputCoreProps {
-  autoComplete?: string;
-  autoFocus?: boolean;
-  children?: React.ReactNode;
-  className?: string;
-  defaultValue?: any;
-  disabled?: boolean;
+// TODO: for whatever reason it wants me to pass "CSS" property as required
+export interface TextFieldProps extends InputBaseProps {
   error?: boolean;
   FormHelperTextProps?: object;
-  focused?: boolean;
-  fullWidth?: boolean;
   helperText?: React.ReactNode;
-  id?: string;
   InputLabelProps?: object;
   inputProps?: object;
+  focused?: boolean;
   inputRef?: React.Ref<any>;
-  multiline?: boolean;
-  name: string;
-  // onBlur?: (ev: React.ChangeEvent<HTMLInputElement>) => void;
-  // onChange: (ev: React.ChangeEvent<HTMLInputElement>) => void;
-  // onFocus?: (ev: React.ChangeEvent<HTMLInputElement>) => void;
-  placeholder?: string;
-  required?: boolean;
+  label?: string;
   select?: boolean;
   SelectProps?: object;
-  type?: string;
   value: any;
   variant?: 'standard';
   startAdornment?: any;
   endAdornment?: any;
 }
-const variantInputComponent = {
-  standard: Input,
-};
 
 const TextField = React.forwardRef<any, TextFieldProps>(function TextField(
   props,
@@ -46,17 +28,16 @@ const TextField = React.forwardRef<any, TextFieldProps>(function TextField(
   const {
     autoComplete,
     autoFocus,
-    children,
+    // children,
     className,
     defaultValue,
     endAdornment,
     error = false,
-    FormHelperTextProps,
-    fullWidth,
+    // FormHelperTextProps,
     focused = false,
     helperText,
     id,
-    InputLabelProps,
+    // InputLabelProps,
     inputProps,
     inputRef,
     label,
@@ -70,12 +51,12 @@ const TextField = React.forwardRef<any, TextFieldProps>(function TextField(
     rows,
     disabled = false,
     select = false,
-    SelectProps,
+    // SelectProps,
     startAdornment,
     type,
     value,
-    variant = 'standard',
-    ...rest
+    // variant = 'standard',
+    // ...rest
   } = props;
 
   // warning(
@@ -86,8 +67,6 @@ const TextField = React.forwardRef<any, TextFieldProps>(function TextField(
   const InputMore = {};
 
   const helperTextId = helperText && id ? `${id}-helper-text` : undefined;
-  // @ts-ignore
-  const InputComponent = variantInputComponent[variant];
 
   return (
     <FormControl
@@ -102,7 +81,7 @@ const TextField = React.forwardRef<any, TextFieldProps>(function TextField(
     >
       {!label ? null : <InputLabel htmlFor={id || name}>{label}</InputLabel>}
       {select ? null : (
-        <InputComponent
+        <InputBase
           aria-describedby={helperTextId}
           autoComplete={autoComplete}
           autoFocus={autoFocus}
@@ -132,4 +111,4 @@ const TextField = React.forwardRef<any, TextFieldProps>(function TextField(
   );
 });
 
-export default TextField;
+export { TextField };

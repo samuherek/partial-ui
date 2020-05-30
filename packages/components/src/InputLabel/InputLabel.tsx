@@ -1,26 +1,26 @@
-import clsx from "clsx";
-import React from "react";
-import FormLabel from "../FormLabel";
-import { LabelStandard } from "./styles";
+import clsx from 'clsx';
+import React from 'react';
+import FormLabel from '../FormLabel';
+import { LabelStandard } from './styles';
 
-interface Props {
+export interface InputLabelProps extends React.HTMLProps<HTMLLabelElement> {
   className?: string;
-  variant?: "standard";
+  variant?: 'standard';
 }
 
-export const classes = {
-  root: "SSInputLabel"
+const classes = {
+  root: 'InputLabel',
 };
 
 const variantComponent = {
-  standard: LabelStandard
+  standard: LabelStandard,
 };
 
-const InputLabel = React.forwardRef<Props, any>(function InputLabel(
+const InputLabel = React.forwardRef<any, InputLabelProps>(function InputLabel(
   props,
   ref
 ) {
-  const { className, variant = "standard", ...rest } = props;
+  const { className, variant = 'standard', ...rest } = props;
 
   // @ts-ignore
   const LabelComponent = variantComponent[variant];
@@ -28,11 +28,13 @@ const InputLabel = React.forwardRef<Props, any>(function InputLabel(
   return (
     <FormLabel
       className={clsx(className, classes.root)}
+      // @ts-ignore
       as={LabelComponent}
+      // @ts-ignore
       ref={ref}
       {...rest}
     />
   );
 });
 
-export default InputLabel;
+export { InputLabel, classes as InputLabelClasses };

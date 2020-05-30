@@ -10,3 +10,7 @@ export * from './Dialog';
 export * from './DialogActions';
 export * from './DialogContent';
 export * from './DialogTitle';
+export * from './InputBase';
+export * from './InputAdornment';
+export * from './InputLabel';
+export * from './TextField';

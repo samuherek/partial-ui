@@ -17,6 +17,7 @@ const classes = {
   root: 'FormControl',
 };
 
+// TODO: rework this into a state machine XState.
 function useFormControl(props: FormControlProps, ref: React.Ref<any>) {
   const {
     className,

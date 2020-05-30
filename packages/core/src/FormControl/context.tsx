@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 export interface CtxStateValues {
   disabled: boolean;
@@ -33,7 +33,7 @@ function useFormControlProvider(props: FormControlProviderProps) {
 
   return {
     props,
-    value
+    value,
   };
 }
 
@@ -46,4 +46,33 @@ function useFormControlCtx() {
   return React.useContext(FormControlContext);
 }
 
-export { FormControlProvider, useFormControlCtx, useFormControlProvider };
+export type MergeFormControlStateOptions = {
+  props: Partial<CtxStateValues>;
+  states: Array<keyof CtxStateValues>;
+  uiFormControlCtx?: FormControlCtx;
+};
+
+function mergeFormControlState({
+  props,
+  states,
+  uiFormControlCtx,
+}: MergeFormControlStateOptions) {
+  return states.reduce<Partial<CtxStateValues>>((acc, state) => {
+    acc[state] = props[state];
+
+    if (uiFormControlCtx) {
+      if (typeof props[state] === 'undefined') {
+        acc[state] = uiFormControlCtx[state];
+      }
+    }
+
+    return acc;
+  }, {});
+}
+
+export {
+  FormControlProvider,
+  useFormControlCtx,
+  useFormControlProvider,
+  mergeFormControlState,
+};

@@ -1,30 +1,34 @@
-import clsx from "clsx";
-import React, { SyntheticEvent } from "react";
-import styled from "styled-components";
-import { useForkRef } from "../../utils/ref";
-import mergeFormControlState from "../../core/FormControl/mergeFormControlState";
-import { isFilled } from "./utils";
-import { useFormControlCtx } from "../../core/FormControl";
+import clsx from 'clsx';
+import React, { SyntheticEvent } from 'react';
+import styled from 'styled-components';
+import { isFilled } from './utils';
+import {
+  InputCoreProps,
+  useFormControlCtx,
+  mergeFormControlState,
+} from '@partial-ui/core';
+import { useForkRef } from '@partial-ui/utils';
 
-interface Props {
-  "aria-describedby"?: string;
-  // renderPrefix,
-  autFocus?: boolean;
-  autoComplete?: string;
-  autoFocus?: boolean;
-  className?: string;
+// TODO: not sure why it does not correctly extends the input core props
+export interface InputBaseProps extends InputCoreProps {
+  'aria-describedby'?: string;
   inputProps?: object;
   wrapProps?: object;
-  defaultValue: any;
-  disabled?: boolean;
+  defaultValue?: any;
   error?: boolean;
-  fullWidth?: boolean;
-  id?: string;
   multiline?: boolean;
   inputRef?: any;
   startAdornment?: any;
   endAdornment?: any;
   name: string;
+  onEmpty?: () => void;
+  onFilled?: () => void;
+  // TODO: these are the repeated props that should come from input core
+  autoComplete?: string;
+  autoFocus?: boolean;
+  className?: string;
+  disabled?: boolean;
+  id: string;
   onBlur?: (
     ev?: SyntheticEvent<HTMLTextAreaElement | HTMLInputElement>
   ) => void;
@@ -37,28 +41,25 @@ interface Props {
   onFocus?: (
     ev: SyntheticEvent<HTMLTextAreaElement | HTMLInputElement>
   ) => void;
-  onEmpty?: () => void;
-  onFilled?: () => void;
   onKeyDown?: (ev: SyntheticEvent<any>) => void;
   onKeyUp?: (ev: SyntheticEvent<any>) => void;
   placeholder?: string;
   readOnly?: boolean;
   required?: boolean;
-  rows?: string | number;
+  rows?: number;
   type?: string;
   value?: any;
 }
 
-export const classes = {
-  root: "SSInputWrap",
-  input: "SSInputBase",
-  disabled: "disabled",
-  error: "error",
-  fullWidth: "full-width",
-  focused: "focused",
-  filled: "filled",
-  prefix: "input-prefix",
-  suffix: "input-suffix"
+const classes = {
+  root: 'InputWrap',
+  input: 'InputBase',
+  disabled: 'disabled',
+  error: 'error',
+  focused: 'focused',
+  filled: 'filled',
+  prefix: 'input-prefix',
+  suffix: 'input-suffix',
 };
 
 const WrapStyled = styled.div`
@@ -66,11 +67,6 @@ const WrapStyled = styled.div`
   display: inline-flex;
   align-items: center;
   position: relative;
-
-  &.full-width {
-    width: 100%;
-    flex: 1;
-  }
 
   &.disabled {
     cursor: default;
@@ -110,15 +106,18 @@ const InputBaseStyled = styled.input`
     -webkit-appearance: none;
   } */
 
-  &[type="search"] {
+  &[type='search'] {
     -moz-appearance: textfield;
     -webkit-appearance: textfield;
   }
 `;
 
-const InputBase = React.forwardRef<Props, any>(function InputBase(props, ref) {
+const InputBase = React.forwardRef<any, InputBaseProps>(function InputBase(
+  props,
+  ref
+) {
   const {
-    "aria-describedby": ariaDescribedby,
+    'aria-describedby': ariaDescribedby,
     // onEmpty,
     // onFilled,
     // renderPrefix,
@@ -126,11 +125,10 @@ const InputBase = React.forwardRef<Props, any>(function InputBase(props, ref) {
     autoFocus = false,
     className,
     inputProps: inputPropsProp = {},
-    wrapProps = { as: "div" },
+    wrapProps = { as: 'div' },
     defaultValue,
     disabled = false,
     error = false,
-    fullWidth = false,
     id,
     multiline = false,
     name,
@@ -149,7 +147,7 @@ const InputBase = React.forwardRef<Props, any>(function InputBase(props, ref) {
     startAdornment,
     endAdornment,
     rows,
-    type = "text",
+    type = 'text',
     value,
     ...rest
   } = props;
@@ -163,7 +161,7 @@ const InputBase = React.forwardRef<Props, any>(function InputBase(props, ref) {
   const fcs: any = mergeFormControlState({
     props,
     uiFormControlCtx: ctxFormControl,
-    states: ["disabled", "error", "required", "filled"]
+    states: ['disabled', 'error', 'required', 'filled'],
   });
   fcs.focused = ctxFormControl ? ctxFormControl.focused : focused;
 
@@ -243,6 +241,7 @@ const InputBase = React.forwardRef<Props, any>(function InputBase(props, ref) {
 
   const handleChange = (ev: SyntheticEvent<any>, ...args: any) => {
     if (onChange) {
+      // @ts-ignore
       onChange(ev, ...args);
     }
   };
@@ -259,13 +258,13 @@ const InputBase = React.forwardRef<Props, any>(function InputBase(props, ref) {
 
   const inputProps: any = {
     ...inputPropsProp,
-    as: "input"
+    as: 'input',
   };
 
   inputProps.ref = handleInputRef;
 
   if (multiline || rows) {
-    inputProps.as = "textarea";
+    inputProps.as = 'textarea';
     inputProps.type = undefined;
   }
 
@@ -276,11 +275,10 @@ const InputBase = React.forwardRef<Props, any>(function InputBase(props, ref) {
       className={clsx(className, classes.root, {
         [classes.disabled]: fcs.disabled,
         [classes.error]: fcs.error,
-        [classes.fullWidth]: fullWidth,
         [classes.focused]: fcs.focused,
         [classes.filled]: fcs.filled,
         [classes.prefix]: startAdornment,
-        [classes.suffix]: endAdornment
+        [classes.suffix]: endAdornment,
       })}
       {...wrapProps}
     >
@@ -289,7 +287,7 @@ const InputBase = React.forwardRef<Props, any>(function InputBase(props, ref) {
         className={clsx(classes.input, {
           [classes.disabled]: fcs.disabled,
           [classes.prefix]: startAdornment,
-          [classes.suffix]: endAdornment
+          [classes.suffix]: endAdornment,
         })}
         aria-describedby={ariaDescribedby}
         aria-invalid={error}
@@ -319,4 +317,4 @@ const InputBase = React.forwardRef<Props, any>(function InputBase(props, ref) {
   );
 });
 
-export default InputBase;
+export { InputBase, classes as InputBaseClasses };

@@ -4,7 +4,7 @@ import { isFilled } from './utils';
 import { UICoreBaseProps } from '../types';
 import { useForkRef, useEnhancedEffect } from '@partial-ui/utils';
 import { useFormControlCtx } from '../FormControl';
-import mergeFormControlState from '../FormControl/mergeFormControlState';
+import { mergeFormControlState } from '../FormControl';
 
 export interface InputCoreProps
   extends UICoreBaseProps,
