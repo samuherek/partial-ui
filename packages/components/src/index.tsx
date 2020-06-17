@@ -2,6 +2,7 @@ export * from './types';
 export * from './ButtonAdornment';
 export * from './ButtonBase';
 export * from './ButtonIcon';
+export * from './ClickAwayListener';
 export * from './List';
 export * from './ListItem';
 export * from './Menu';

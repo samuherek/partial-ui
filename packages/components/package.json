@@ -1,6 +1,6 @@
 {
   "name": "@partial-ui/components",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "author": "Sam Uherek",
   "license": "MIT",
   "main": "dist/index.js",
